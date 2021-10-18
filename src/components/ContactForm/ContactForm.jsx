@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import { connect } from 'react-redux';
+import phonebookActions from '../../redux/phonebook/phonebook-actions';
 import { ImUsers, ImProfile, ImPhone } from 'react-icons/im';
 
 import { ContactForm, Label, Input, Button } from './ContactForm.styled';
 const initialState = { name: '', number: '' };
 
-export const Form = ({ onSubmit }) => {
+const Form = ({ onSubmit }) => {
   const [contactCred, setContactCred] = useState(initialState);
 
   const nameInputId = uuidv4();
@@ -13,7 +15,6 @@ export const Form = ({ onSubmit }) => {
 
   const handleChange = e => {
     const { name, value } = e.target;
-    console.log(name, value);
     setContactCred(prevState => ({ ...prevState, [name]: value }));
   };
 
@@ -65,3 +66,10 @@ export const Form = ({ onSubmit }) => {
     </ContactForm>
   );
 };
+
+const mapDispatchtoProps = dispatch => ({
+  onSubmit: ({ name, number }) =>
+    dispatch(phonebookActions.addContact(name, number)),
+});
+
+export default connect(null, mapDispatchtoProps)(Form);
