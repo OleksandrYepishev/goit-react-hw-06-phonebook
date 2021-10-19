@@ -28,7 +28,7 @@ const phonebookPersistConfig = {
   blacklist: ['filter'],
 };
 
-const store = configureStore({
+export const store = configureStore({
   reducer: {
     phonebook: persistReducer(phonebookPersistConfig, phohebookReducer)
   },
@@ -36,6 +36,4 @@ const store = configureStore({
     devTools: process.env.NODE_ENV === 'development',
   });
 
-const persistor = persistStore(store);
-
-export default { store, persistor };
+export const persistor = persistStore(store);
