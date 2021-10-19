@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import phonebookActions from '../../redux/phonebook/phonebook-actions';
 import { ImUsers, ImProfile, ImPhone } from 'react-icons/im';
 
 import { ContactForm, Label, Input, Button } from './ContactForm.styled';
 const initialState = { name: '', number: '' };
 
-const Form = ({ onSubmit }) => {
+const Form = ({ contacts, onSubmit }) => {
   const [contactCred, setContactCred] = useState(initialState);
 
   const nameInputId = uuidv4();
@@ -20,6 +21,17 @@ const Form = ({ onSubmit }) => {
 
   const handleSubmit = e => {
     e.preventDefault();
+    const { name } = contactCred;
+
+    const isDoubleContact = contacts.find(
+      contact => contact.name.toLowerCase() === name.toLowerCase(),
+    );
+
+    if (isDoubleContact) {
+      alert(`${name} is already in contacts`);
+      return;
+    }
+
     onSubmit(contactCred);
     resetState();
   };
@@ -66,10 +78,17 @@ const Form = ({ onSubmit }) => {
     </ContactForm>
   );
 };
+const mapStateToProps = ({ phonebook: { contacts } }) => ({
+  contacts,
+});
 
 const mapDispatchtoProps = dispatch => ({
   onSubmit: ({ name, number }) =>
     dispatch(phonebookActions.addContact(name, number)),
 });
 
-export default connect(null, mapDispatchtoProps)(Form);
+export default connect(mapStateToProps, mapDispatchtoProps)(Form);
+
+Form.propTypes = {
+  onDeleteContacts: PropTypes.func,
+};
