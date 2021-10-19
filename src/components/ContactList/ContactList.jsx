@@ -1,38 +1,43 @@
-import React from 'react';
+import { useMemo } from 'react';
 import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import useDebounce from '../../Hooks/debounce-hook';
 import phonebookActions from '../../redux/phonebook/phonebook-actions';
+import {
+  getFilter,
+  getContacts,
+} from '../../redux/phonebook/phonebook-selectors';
 
 import { List, Item, Button } from './ContactList.styled';
 
-const ContactList = ({ contacts, onDeleteContact }) => (
-  <List>
-    {contacts.map(({ id, name, number }) => (
-      <Item key={id}>
-        <span>{name}:</span> <span>{number}</span>
-        <Button type="button" onClick={() => onDeleteContact(id)}>
-          Delete
-        </Button>
-      </Item>
-    ))}
-  </List>
-);
+export const ContactList = () => {
+  const contacts = useSelector(getContacts);
+  const filter = useSelector(getFilter);
 
-const getFilteredContacts = (allContacts, filter) => {
-  return allContacts.filter(({ name }) =>
-    name.toLowerCase().includes(filter.toLowerCase()),
+  const dispatch = useDispatch();
+  const onDeleteContact = id => dispatch(phonebookActions.deleteContact(id));
+
+  const debouncedFilter = useDebounce(filter, 500);
+
+  const getFilteredContacts = useMemo(() => {
+    return contacts.filter(contact =>
+      contact.name.toLowerCase().includes(debouncedFilter.toLowerCase()),
+    );
+  }, [contacts, debouncedFilter]);
+
+  return (
+    <List>
+      {getFilteredContacts.map(({ id, name, number }) => (
+        <Item key={id}>
+          <span>{name}:</span> <span>{number}</span>
+          <Button type="button" onClick={() => onDeleteContact(id)}>
+            Delete
+          </Button>
+        </Item>
+      ))}
+    </List>
   );
 };
-
-const mapStateToProps = ({ phonebook: { contacts, filter } }) => ({
-  contacts: getFilteredContacts(contacts, filter),
-});
-
-const mapDispatchToProps = dispatch => ({
-  onDeleteContact: id => dispatch(phonebookActions.deleteContact(id)),
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(ContactList);
 
 ContactList.propTypes = {
   contacts: PropTypes.arrayOf(

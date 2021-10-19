@@ -1,15 +1,21 @@
 import { useState } from 'react';
 import { v4 as uuidv4 } from 'uuid';
-import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import phonebookActions from '../../redux/phonebook/phonebook-actions';
+import { getContacts } from '../../redux/phonebook/phonebook-selectors';
 import { ImUsers, ImProfile, ImPhone } from 'react-icons/im';
 
 import { ContactForm, Label, Input, Button } from './ContactForm.styled';
 const initialState = { name: '', number: '' };
 
-const Form = ({ contacts, onSubmit }) => {
+export const Form = () => {
   const [contactCred, setContactCred] = useState(initialState);
+  const contacts = useSelector(getContacts);
+  const dispatch = useDispatch();
+
+  const onSubmit = ({ name, number }) =>
+    dispatch(phonebookActions.addContact(name, number));
 
   const nameInputId = uuidv4();
   const numberInputId = uuidv4();
@@ -78,17 +84,14 @@ const Form = ({ contacts, onSubmit }) => {
     </ContactForm>
   );
 };
-const mapStateToProps = ({ phonebook: { contacts } }) => ({
-  contacts,
-});
-
-const mapDispatchtoProps = dispatch => ({
-  onSubmit: ({ name, number }) =>
-    dispatch(phonebookActions.addContact(name, number)),
-});
-
-export default connect(mapStateToProps, mapDispatchtoProps)(Form);
 
 Form.propTypes = {
+  contacts: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string,
+      name: PropTypes.string,
+      number: PropTypes.string,
+    }),
+  ),
   onDeleteContacts: PropTypes.func,
 };
