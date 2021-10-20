@@ -1,14 +1,13 @@
 import { createAction, nanoid  } from '@reduxjs/toolkit';
 
-const addContact = createAction('phonebook/add', ( name, number) => ({
+const addContact = createAction('phonebook/add', (data) => ({
     payload: {
         id: nanoid(),
-        name,
-        number,
+        ...data
     }
 }));
 
 const deleteContact = createAction('phonebook/delete');
-const changeFilter = createAction('phonebook/changeFilter');
+export const changeFilter = createAction('phonebook/changeFilter');
 
 export default {addContact, deleteContact, changeFilter};

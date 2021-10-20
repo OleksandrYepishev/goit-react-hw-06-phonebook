@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { nanoid } from '@reduxjs/toolkit';
 import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
-import phonebookActions from '../../redux/phonebook/phonebook-actions';
-import { getContacts } from '../../redux/phonebook/phonebook-selectors';
+import phonebookActions from '../../redux/contacts/contacts-actions';
+import { getContacts } from '../../redux/contacts/contacts-selectors';
 import { ImUsers, ImProfile, ImPhone } from 'react-icons/im';
 
 import { ContactForm, Label, Input, Button } from './ContactForm.styled';
@@ -15,7 +15,7 @@ export const Form = () => {
   const dispatch = useDispatch();
 
   const onSubmit = ({ name, number }) =>
-    dispatch(phonebookActions.addContact(name, number));
+    dispatch(phonebookActions.addContact({ name, number }));
 
   const nameInputId = nanoid();
   const numberInputId = nanoid();

@@ -11,7 +11,7 @@ import {
   REGISTER,
 } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
-import phohebookReducer from '../redux/phonebook/phonebook-reducer';
+import phohebookReducer from '../redux/contacts/contacts-reducers';
 
 const middleware = [
   ...getDefaultMiddleware({

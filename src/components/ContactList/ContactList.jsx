@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import useDebounce from '../../Hooks/debounce-hook';
-import phonebookActions from '../../redux/phonebook/phonebook-actions';
-import { getFilteredContacts } from '../../redux/phonebook/phonebook-selectors';
+import phonebookActions from '../../redux/contacts/contacts-actions';
+import { getFilteredContacts } from '../../redux/contacts/contacts-selectors';
 
 import { List, Item, Button } from './ContactList.styled';
 
